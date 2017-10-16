@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WEB-Bank by Mikko R.</title>
+
+    <script>
+        var ekoodiBank = {};
+    </script>
+
+    <script src="ekoodi-bank.js"></script>
+
+
+</head>
+<body>
+
+<script>
+
+    var bank = ekoodiBank.bank('Nordea','NDEAFIHH');
+    ekoodiBank.bankList.push(bank);
+
+    var bank = ekoodiBank.bank('S-Pankki','SBANFIHH');
+    ekoodiBank.bankList.push(bank);
+
+    var bank = ekoodiBank.bank('Osuuspankki','OKOYFIHH');
+    ekoodiBank.bankList.push(bank);
+
+</script>
+</body>
+</html>
