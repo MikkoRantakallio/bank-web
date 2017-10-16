@@ -9,23 +9,139 @@
     </script>
 
     <script src="ekoodi-bank.js"></script>
-
+    <script src="ekoodi-customer.js"></script>
+    <script src="ekoodi-bank-account.js"></script>
+    <script src="ekoodi-transaction.js"></script>
 
 </head>
 <body>
+<h3>Select bank</h3>
 
-<textarea rows="4" cols="20"></textarea>
+<select id="bankDropDown" onchange="ChangeBankDropDown (this.value)">
+    <option></option>
+</select>
 
+<h3>Select customer</h3>
+
+<select id="custDropDown" onchange="ChangeCustDropDown (this.value)">
+    <option></option>
+</select>
+
+<h3>Select account</h3>
+
+<select id="accDropDown" onchange="ChangeAccDropDown (this.value)">
+    <option></option>
+</select>
+
+<h3>Transactions</h3>
+
+<textarea id="transactions" cols="75" rows="10"></textarea>
 <script>
+
+    function ChangeBankDropDown(value){
+
+        if (value !='') {
+
+            var custCombo = document.getElementById('custDropDown');
+            ekoodiBank.fillCustCombo(custCombo, value);
+        }
+        else {
+            ekoodiBank.clearBank();
+        }
+    }
+
+    function ChangeCustDropDown(value){
+
+        if (value !='') {
+
+            var accCombo = document.getElementById('accDropDown');
+            var bankCombo = document.getElementById('bankDropDown');
+
+            var commaPos = value.indexOf(',');
+            ekoodiBank.fillAccountCombo(accCombo, value.substring(commaPos+1), value.substring(0,commaPos), bankCombo.value);
+        }
+        else {
+            ekoodiBank.clearCust();
+        }
+    }
+
+    function ChangeAccDropDown(value){
+
+        if (value !='') {
+
+            var bankCombo = document.getElementById('bankDropDown');
+            var custCombo = document.getElementById('custDropDown');
+            var tArea = document.getElementById('transactions');
+
+            var commaPos = custCombo.value.indexOf(',');
+            ekoodiBank.fillTransactionArea(tArea, value, custCombo.value.substring(commaPos+1), custCombo.value.substring(0, commaPos),bankCombo.value );
+        }
+        else{
+            ekoodiBank.clearAccount();
+        }
+    }
+    // Create the gorgeous "Database" :-)
+
+    var d = new Date('10.10.2017');
 
     var bank = ekoodiBank.bank('Nordea','NDEAFIHH');
     ekoodiBank.bankList.push(bank);
 
-    var bank = ekoodiBank.bank('S-Pankki','SBANFIHH');
-    ekoodiBank.bankList.push(bank);
+    var c1 = ekoodiBank.customer('Mikko', 'Rantakallio');
+    bank.addCustomer(c1);
+    var a1 = ekoodiBank.bankAccount('Mikko', 'Rantakallio','FI67 3636 3010 02047','NDEAFIHH')
+    c1.addAccount(a1);
+    var t1 = ekoodiBank.transaction('FI67 3636 3010 02047', d,355);
+    a1.addTransaction(t1);
+    var t2 = ekoodiBank.transaction('FI67 3636 3010 02047', d,-45);
+    a1.addTransaction(t2);
 
-    var bank = ekoodiBank.bank('Osuuspankki','OKOYFIHH');
-    ekoodiBank.bankList.push(bank);
+    var c2 = ekoodiBank.customer('James', 'Bond');
+    bank.addCustomer(c2);
+    var a2 = ekoodiBank.bankAccount('James', 'Bond','FI67 3636 5555 11111','NDEAFIHH')
+    c2.addAccount(a2);
+
+    var c3 = ekoodiBank.customer('Matti', 'Nykänen');
+    bank.addCustomer(c3);
+    var a3 = ekoodiBank.bankAccount('Matti', 'Nykänen','FI67 3636 1111 32003','NDEAFIHH')
+    c3.addAccount(a3);
+
+    var bank1 = ekoodiBank.bank('S-Pankki','SBANFIHH');
+    ekoodiBank.bankList.push(bank1);
+    var c4 = ekoodiBank.customer('Jack', 'Reacher');
+    bank1.addCustomer(c4);
+    var a4 = ekoodiBank.bankAccount('Jack', 'Reacher','FI67 3444 1111 32003','SBANFIHH')
+    c4.addAccount(a4);
+
+    var c5 = ekoodiBank.customer('Ethan', 'Hunt');
+    bank1.addCustomer(c5);
+    var a5 = ekoodiBank.bankAccount('Ethan', 'Hunt','FI66 3456 4444 36663','SBANFIHH')
+    c5.addAccount(a5);
+
+    var c6 = ekoodiBank.customer('Frank', 'Martin');
+    bank1.addCustomer(c6);
+    var a6 = ekoodiBank.bankAccount('Frank', 'Martin','FI68 3654 8765 22263','SBANFIHH')
+    c6.addAccount(a6);
+
+    var bank2 = ekoodiBank.bank('Osuuspankki','OKOYFIHH');
+    ekoodiBank.bankList.push(bank2);
+    var c7 = ekoodiBank.customer('Sergey', 'Bubka');
+    bank2.addCustomer(c7);
+    var a7 = ekoodiBank.bankAccount('Sergey', 'Bubka','FI23 6543 8765 22263','OKOYFIHH')
+    c7.addAccount(a7);
+
+    var c8 = ekoodiBank.customer('Usain', 'Bolt');
+    bank2.addCustomer(c8);
+    var a8 = ekoodiBank.bankAccount('Usain', 'Bolt','FI26 6123 5678 22263','OKOYFIHH')
+    c8.addAccount(a8);
+
+    var c9 = ekoodiBank.customer('Michael', 'Phelps');
+    bank2.addCustomer(c9);
+    var a9 = ekoodiBank.bankAccount('Michael', 'Phelps','FI28 6001 5008 20003','OKOYFIHH')
+    c9.addAccount(a9);
+
+    var bCombo = document.getElementById('bankDropDown');
+    ekoodiBank.fillCombo(bCombo, ekoodiBank.bankList);
 
 </script>
 </body>
