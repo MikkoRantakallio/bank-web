@@ -80,6 +80,9 @@ ekoodiBank.clearBank = function () {
     ekoodiBank.ui.selectedBank = null;
     ekoodiBank.ui.selectedCustomer = null;
     ekoodiBank.ui.selectedAccount = null;
+
+    // Hide the transaction fields and button
+    ekoodiBank.enableTransactionAdd(false);
 };
 
 ekoodiBank.clearCust = function () {
@@ -91,6 +94,9 @@ ekoodiBank.clearCust = function () {
 
     ekoodiBank.ui.selectedCustomer = null;
     ekoodiBank.ui.selectedAccount = null;
+
+    // Hide the transaction fields and button
+    ekoodiBank.enableTransactionAdd(false);
 };
 
 ekoodiBank.clearAccount = function () {
@@ -99,6 +105,9 @@ ekoodiBank.clearAccount = function () {
     tDiv.innerHTML = "";
 
     ekoodiBank.ui.selectedAccount = null;
+
+    // Hide the transaction fields and button
+    ekoodiBank.enableTransactionAdd(false);
 };
 
 ekoodiBank.bankList = [];

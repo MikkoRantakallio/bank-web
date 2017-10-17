@@ -13,6 +13,11 @@
     <script src="ekoodi-bank-account.js"></script>
     <script src="ekoodi-transaction.js"></script>
 
+    <style>
+        div{
+            background-color: lightgray;
+        }
+    </style>
 </head>
 <body>
 <h3>Select bank</h3>
@@ -34,6 +39,13 @@
 </select>
 
 <h3>Transactions</h3>
+
+<input type="date" id="transDate" onkeydown="return false">
+<input type="number" id="transAmount" step="0.01">
+<input type="Submit" id="saveButton" value="Add" onclick="SaveTransaction()">
+<br>
+<br>
+
 <div id="transDiv">
 
 </div>
@@ -64,9 +76,19 @@
         ekoodiBank.clearAccount();
         if (value !='') {
 
-            ekoodiBank.fillTransactionArea(value);
+            ekoodiBank.showTransactions(value);
+            ekoodiBank.enableTransactionAdd(true);
+        }
+        else {
+            ekoodiBank.enableTransactionAdd(false);
         }
     }
+
+    function SaveTransaction(){
+
+        ekoodiBank.SaveTransaction();
+    }
+
     // Create the gorgeous "Database" :-)
 
     var d1 = new Date('10.12.2017');
@@ -134,6 +156,9 @@
 
     var bCombo = document.getElementById('bankDropDown');
     ekoodiBank.fillCombo(bCombo, ekoodiBank.bankList);
+
+    // Hide the transaction fields and button by default
+    ekoodiBank.enableTransactionAdd(false);
 
 </script>
 </body>
