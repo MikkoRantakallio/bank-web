@@ -22,24 +22,27 @@ ekoodiBank.customer = function (firstName, lastName) {
     }
 };
 
-ekoodiBank.fillCustCombo = function (combo, bank) {
+ekoodiBank.fillCustCombo = function (bank) {
 
     for (var i = 0; i < ekoodiBank.bankList.length; i++) {
 
         if (ekoodiBank.bankList[i].bicCode == bank) {
 
-            // First clear the combo box
-            for(j = combo.options.length - 1 ; j >= 0 ; j--) {
-                combo.remove(j);
+            // First clear the customer combo box
+            var custCombo = document.getElementById('custDropDown');
+            for(j = custCombo.options.length - 1 ; j >= 0 ; j--) {
+                custCombo.remove(j);
             }
 
             // Get customers and fill the combo box
-            var custList = ekoodiBank.bankList[i].getCustomers();
+            ekoodiBank.ui.selectedBank = ekoodiBank.bankList[i];
+
+            var custList = ekoodiBank.ui.selectedBank.getCustomers();
             var arrLen = custList.length;
 
             // Add an empty row to combo
             var emptyElem = document.createElement("option");
-            combo.appendChild(emptyElem);
+            custCombo.appendChild(emptyElem);
 
             for (var j=0; j< arrLen; j++){
 
@@ -48,7 +51,7 @@ ekoodiBank.fillCustCombo = function (combo, bank) {
                 elem.textContent = opt.lastName + ' ' + opt.firstName;
                 elem.value = opt.lastName + ',' + opt.firstName;
 
-                combo.appendChild(elem)
+                custCombo.appendChild(elem)
             }
         }
     }

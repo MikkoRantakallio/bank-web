@@ -8,42 +8,32 @@ ekoodiBank.transaction = function (iban, date, amount) {
     }
 };
 
-ekoodiBank.fillTransactionArea = function (tArea, iban, fName, lName, bicCode){
+ekoodiBank.fillTransactionArea = function (iban) {
 
-    for (var i = 0; i < ekoodiBank.bankList.length; i++) {
+    // First clear the textDiv element
+    var tDiv = document.getElementById("transDiv");
+    tDiv.innerHTML="";
 
-        // Find bank
-        if (ekoodiBank.bankList[i].bicCode == bicCode) {
+    var accList = ekoodiBank.ui.selectedCustomer.getAccounts();
+    var arrLen = accList.length;
 
-            // First clear the textArea
-            tArea.value="";
+    // Find account and transactions
+    for (var j = 0; j < arrLen; j++) {
 
-            // Find customer
-            var custList = ekoodiBank.bankList[i].getCustomers();
-            var arrLen = custList.length;
+        if (accList[j].iban == iban) {
 
-            for (var k=0; k<arrLen; k++) {
+            ekoodiBank.ui.selectedAccount = accList[j];
+            var tActions = ekoodiBank.ui.selectedAccount.getTransactions();
 
-                if (custList[k].firstName == fName && custList[k].lastName==lName){
+            for (l = 0; l < tActions.length; l++) {
 
-                    var accList = custList[k].getAccounts();
-                    var arrLen2 = accList.length;
+                var MyDateString = ('0' + tActions[l].date.getDate()).slice(-2) + '.'
+                    + ('0' + (tActions[l].date.getMonth()+1)).slice(-2) + '.'
+                    + tActions[l].date.getFullYear();
 
-                    // Find account and transactions
-                    for (var j=0; j< arrLen2; j++){
-
-                        if (accList[j].iban == iban) {
-
-                            var tActions = accList[j].getTransactions();
-
-                            for (l=0; l<tActions.length;l++){
-
-                                tArea.value += tActions[l].date + ', ' + tActions[l].amount + '\n';
-                            }
-//                            tArea.value = tActions.join("\n");
-                        }
-                    }
-                }
+                var transRow = document.createTextNode(MyDateString + ': ' + tActions[l].amount +'e');
+                tDiv.appendChild(transRow);
+                tDiv.appendChild(document.createElement('br'));
             }
         }
     }

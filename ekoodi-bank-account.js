@@ -5,11 +5,11 @@ ekoodiBank.bankAccount = function (firstName, lastName, iban, bicCode) {
     var lastName = lastName;
     var transactions = [];
 
-    function addTransactionToAccount(tAction){
+    function addTransactionToAccount(tAction) {
         transactions.push(tAction);
     }
 
-    function getTransactions(){
+    function getTransactions() {
         return transactions;
     }
 
@@ -24,46 +24,44 @@ ekoodiBank.bankAccount = function (firstName, lastName, iban, bicCode) {
     }
 };
 
-ekoodiBank.fillAccountCombo = function (combo, fName, lName, bicCode) {
+ekoodiBank.fillAccountCombo = function ( fName, lName) {
 
-    for (var i = 0; i < ekoodiBank.bankList.length; i++) {
+    // First clear the combo box
+    var accCombo = document.getElementById('accDropDown');
+    for (j = accCombo.options.length - 1; j >= 0; j--) {
+        accCombo.remove(j);
+    }
 
-        if (ekoodiBank.bankList[i].bicCode == bicCode) {
+    // Clear transactions
+    var tDiv = document.getElementById("transDiv");
+    tDiv.innerHTML = "";
 
-            // First clear the combo box
-            for(j = combo.options.length - 1 ; j >= 0 ; j--) {
-                combo.remove(j);
-            }
+    // Customer
+    var custList = ekoodiBank.ui.selectedBank.getCustomers();
+    var arrLen = custList.length;
 
-            // Clear transactions
-            var tArea = document.getElementById('transactions');
-            tArea.value="";
+    for (var k = 0; k < arrLen; k++) {
 
-            // Find customer
-            var custList = ekoodiBank.bankList[i].getCustomers();
-            var arrLen = custList.length;
+        if (custList[k].firstName == fName && custList[k].lastName == lName) {
 
-            for (var k=0; k<arrLen; k++) {
+            // Add an empty row to combo
+            var emptyElem = document.createElement("option");
+            accCombo.appendChild(emptyElem);
 
-                if (custList[k].firstName == fName && custList[k].lastName==lName){
+            ekoodiBank.ui.selectedCustomer = custList[k];
+            var accList = ekoodiBank.ui.selectedCustomer.getAccounts();
+            var arrLen2 = accList.length;
 
-                    // Add an empty row to combo
-                    var emptyElem = document.createElement("option");
-                    combo.appendChild(emptyElem);
+            // Loop accounts and add them to the combo
 
-                    var accList = custList[k].getAccounts();
-                    var arrLen2 = accList.length;
+            for (var j = 0; j < arrLen2; j++) {
 
-                    for (var j=0; j< arrLen2; j++){
+                var opt = accList[j];
+                var elem = document.createElement("option");
+                elem.textContent = opt.iban;
+                elem.value = opt.iban;
 
-                        var opt = accList[j];
-                        var elem = document.createElement("option");
-                        elem.textContent = opt.iban;
-                        elem.value = opt.iban;
-
-                        combo.appendChild(elem)
-                    }
-                }
+                accCombo.appendChild(elem)
             }
         }
     }

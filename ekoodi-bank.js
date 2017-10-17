@@ -25,6 +25,19 @@ ekoodiBank.bank = function (name, bicCode) {
     }
 };
 
+ekoodiBank.ui = function () {
+
+    var selectedBank;
+    var selectedCustomer;
+    var selectedAccount;
+
+    return {
+        selectedBank: selectedBank,
+        selectedCustomer: selectedCustomer,
+        selectedAccount: selectedAccount
+    }
+};
+
 ekoodiBank.fillCombo = function (combo, list) {
 
     var arrLen = list.length;
@@ -61,22 +74,31 @@ ekoodiBank.clearBank = function () {
     ClearCust();
     ClearAccounts();
 
-    var tArea = document.getElementById('transactions');
-    tArea.value="";
+    var tDiv = document.getElementById("transDiv");
+    tDiv.innerHTML = "";
+
+    ekoodiBank.ui.selectedBank = null;
+    ekoodiBank.ui.selectedCustomer = null;
+    ekoodiBank.ui.selectedAccount = null;
 };
 
 ekoodiBank.clearCust = function () {
 
     ClearAccounts();
 
-    var tArea = document.getElementById('transactions');
-    tArea.value="";
+    var tDiv = document.getElementById("transDiv");
+    tDiv.innerHTML = "";
+
+    ekoodiBank.ui.selectedCustomer = null;
+    ekoodiBank.ui.selectedAccount = null;
 };
 
 ekoodiBank.clearAccount = function () {
 
-    var tArea = document.getElementById('transactions');
-    tArea.value="";
+    var tDiv = document.getElementById("transDiv");
+    tDiv.innerHTML = "";
+
+    ekoodiBank.ui.selectedAccount = null;
 };
 
 ekoodiBank.bankList = [];

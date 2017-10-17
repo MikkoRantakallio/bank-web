@@ -34,55 +34,43 @@
 </select>
 
 <h3>Transactions</h3>
+<div id="transDiv">
 
-<textarea id="transactions" cols="75" rows="10"></textarea>
+</div>
+
 <script>
 
     function ChangeBankDropDown(value){
 
+        ekoodiBank.clearBank();
         if (value !='') {
 
-            var custCombo = document.getElementById('custDropDown');
-            ekoodiBank.fillCustCombo(custCombo, value);
-        }
-        else {
-            ekoodiBank.clearBank();
+            ekoodiBank.fillCustCombo(value);
         }
     }
 
     function ChangeCustDropDown(value){
 
+        ekoodiBank.clearCust();
         if (value !='') {
 
-            var accCombo = document.getElementById('accDropDown');
-            var bankCombo = document.getElementById('bankDropDown');
-
             var commaPos = value.indexOf(',');
-            ekoodiBank.fillAccountCombo(accCombo, value.substring(commaPos+1), value.substring(0,commaPos), bankCombo.value);
-        }
-        else {
-            ekoodiBank.clearCust();
+            ekoodiBank.fillAccountCombo(value.substring(commaPos+1), value.substring(0,commaPos));
         }
     }
 
     function ChangeAccDropDown(value){
 
+        ekoodiBank.clearAccount();
         if (value !='') {
 
-            var bankCombo = document.getElementById('bankDropDown');
-            var custCombo = document.getElementById('custDropDown');
-            var tArea = document.getElementById('transactions');
-
-            var commaPos = custCombo.value.indexOf(',');
-            ekoodiBank.fillTransactionArea(tArea, value, custCombo.value.substring(commaPos+1), custCombo.value.substring(0, commaPos),bankCombo.value );
-        }
-        else{
-            ekoodiBank.clearAccount();
+            ekoodiBank.fillTransactionArea(value);
         }
     }
     // Create the gorgeous "Database" :-)
 
-    var d = new Date('10.10.2017');
+    var d1 = new Date('10.12.2017');
+    var d2 = new Date('05.09.2017');
 
     var bank = ekoodiBank.bank('Nordea','NDEAFIHH');
     ekoodiBank.bankList.push(bank);
@@ -91,15 +79,19 @@
     bank.addCustomer(c1);
     var a1 = ekoodiBank.bankAccount('Mikko', 'Rantakallio','FI67 3636 3010 02047','NDEAFIHH')
     c1.addAccount(a1);
-    var t1 = ekoodiBank.transaction('FI67 3636 3010 02047', d,355);
+    var t1 = ekoodiBank.transaction('FI67 3636 3010 02047', d1,355);
     a1.addTransaction(t1);
-    var t2 = ekoodiBank.transaction('FI67 3636 3010 02047', d,-45);
+    var t2 = ekoodiBank.transaction('FI67 3636 3010 02047', d2,-45);
     a1.addTransaction(t2);
 
     var c2 = ekoodiBank.customer('James', 'Bond');
     bank.addCustomer(c2);
     var a2 = ekoodiBank.bankAccount('James', 'Bond','FI67 3636 5555 11111','NDEAFIHH')
     c2.addAccount(a2);
+    var t3 = ekoodiBank.transaction('FI67 3636 5555 11111', d2,105);
+    a2.addTransaction(t3);
+    var t4 = ekoodiBank.transaction('FI67 3636 5555 11111', d1,-85);
+    a2.addTransaction(t4);
 
     var c3 = ekoodiBank.customer('Matti', 'Nykänen');
     bank.addCustomer(c3);
