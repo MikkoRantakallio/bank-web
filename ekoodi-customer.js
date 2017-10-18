@@ -93,8 +93,6 @@ ekoodiBank.insertCustomer = function () {
         // Clear fields and hide div
         fName.value = "";
         lName.value = "";
-
-        var custAddDiv = document.getElementById("custAdd");
-        custAddDiv.style.display = 'none';
+        ekoodiBank.showCustDiv(false);
     }
 };

@@ -35,9 +35,11 @@ ekoodiBank.showTransactions = function (iban) {
                 if (Number(tActions[l].amount) > 0) {
                     signStr = '+';
                 }
-                var transRow = document.createTextNode(MyDateString + ': ' + signStr + tActions[l].amount + 'e');
-                tDiv.appendChild(transRow);
-                tDiv.appendChild(document.createElement('br'));
+                var div = document.createElement('div');
+                div.className = 'tRow';
+                div.textContent = MyDateString + ': ' + signStr + Number(tActions[l].amount).toFixed(2) + 'e';
+
+                tDiv.appendChild(div);
             }
         }
     }
@@ -64,7 +66,7 @@ ekoodiBank.SaveTransaction = function () {
     var amountField = document.getElementById("transAmount");
     var tDate = new Date(dateField.value);
 
-    if (Number(amountField.value) !=0) {
+    if (Number(amountField.value) != 0) {
 
         var MyDateString = ('0' + tDate.getDate()).slice(-2) + '.' + ('0' + (tDate.getMonth() + 1)).slice(-2)
             + '.' + tDate.getFullYear();
@@ -81,9 +83,11 @@ ekoodiBank.SaveTransaction = function () {
             signStr = '+';
         }
         var tDiv = document.getElementById("transDiv");
-        var transRow = document.createTextNode(MyDateString + ': ' + signStr + Number(newTrans.amount).toFixed(2) + 'e');
-        tDiv.appendChild(transRow);
-        tDiv.appendChild(document.createElement('br'));
+
+        var div = document.createElement('div');
+        div.className = 'tRow';
+        div.textContent = MyDateString + ': ' + signStr + Number(newTrans.amount).toFixed(2) + 'e';
+        tDiv.appendChild(div);
 
         // Clear fields
         dateField.value = null;

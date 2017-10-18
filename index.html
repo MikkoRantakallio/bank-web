@@ -18,7 +18,13 @@
 
     <style>
         .transDiv {
-            background-color: lightgray;
+            background-color: azure;
+            margin-left: 50px;
+            margin-right: 50px;
+        }
+
+        .tRow:nth-of-type(odd) {
+            background: #e0e0e0;
         }
 
         .addButton {
@@ -77,7 +83,8 @@
             onchange="ChangeAccDropDown (this.value)" style="width: 200px;">
         <option></option>
     </select>
-    <button class="mdc-button mdc-button--raised mdc-button--dense addButton" id="accAddButton" onclick="AddAccount()">
+    <button class="mdc-button mdc-button--raised mdc-button--dense addButton" id="accAddButton"
+            onclick="OpenAccountDiv()">
         Add account
     </button>
 
@@ -85,7 +92,7 @@
 
     <label for="css-only-textfield-box" class="mdc-typography--subheading2">Date</label>
     <div class="mdc-textfield mdc-textfield--box">
-        <input type="date" class="mdc-textfield__input" id="transDate" style="width: 190px;">
+        <input type="date" class="mdc-textfield__input" id="transDate" style="width: 190px;" input onkeydown="return false">
     </div>
 
     <label for="css-only-textfield-box" class="mdc-typography--subheading2">Amount</label>
@@ -93,7 +100,8 @@
         <input type="number" class="mdc-textfield__input" id="transAmount" step="0.01"
                style="width: 150px;">
     </div>
-    <button class="mdc-button mdc-button--raised mdc-button--dense saveButton" id="saveButton" onclick="SaveTransaction()">Add
+    <button class="mdc-button mdc-button--raised mdc-button--dense saveButton" id="saveButton"
+            onclick="SaveTransaction()">Add
     </button>
 
 
@@ -106,7 +114,7 @@
 <!-- Customer add div -->
 <div id="custAdd" class="mdc-elevation--z8"
      style="width: 580px; margin-top: 15px; margin-left: auto; margin-right: auto; padding: 12px; background-color: white">
-    <h3 class="mdc-typography--headline">New customer</h3>
+    <h3 id="newCust" class="mdc-typography--headline">New customer</h3>
     <label for="css-only-textfield-box" class="mdc-typography--subheading2">First name</label>
     <div class="mdc-textfield mdc-textfield--box">
         <input type="text" class="mdc-textfield__input" id="firstName" style="width: 100px;">
@@ -116,7 +124,8 @@
     <div class="mdc-textfield mdc-textfield--box">
         <input type="text" class="mdc-textfield__input" id="lastName" style="width: 190px;">
     </div>
-    <button class="mdc-button mdc-button--raised mdc-button--dense saveButton" id="saveCustButton" onclick="ekoodiBank.insertCustomer()">Add
+    <button class="mdc-button mdc-button--raised mdc-button--dense saveButton" id="saveCustButton"
+            onclick="ekoodiBank.insertCustomer()">Add
     </button>
 </div>
 
@@ -130,7 +139,8 @@
         <input type="text" class="mdc-textfield__input" id="iban" style="width: 250px;">
     </div>
 
-    <button class="mdc-button mdc-button--raised mdc-button--dense saveButton" id="saveAcctButton" onclick="AddAccount()">Add
+    <button class="mdc-button mdc-button--raised mdc-button--dense saveButton" id="saveAcctButton"
+            onclick="ekoodiBank.insertAccount()">Add
     </button>
 </div>
 
@@ -187,14 +197,37 @@
 
     function OpenCustomerDiv() {
 
-        ekoodiBank.showAccDiv(false);
-        ekoodiBank.showCustDiv(true);
-//        ekoodiBank.insertCustomer();
+        var custAdd = document.getElementById("custAdd");
+
+        if (custAdd.style.display == 'block') {
+
+            ekoodiBank.showAccDiv(false);
+            ekoodiBank.showCustDiv(false);
+        }
+        else {
+            ekoodiBank.showAccDiv(false);
+            ekoodiBank.showCustDiv(true);
+            var label = document.getElementById("newCust");
+            label.textContent = 'New customer for ' + ekoodiBank.ui.selectedBank.name;
+        }
     }
 
-    function AddAccount() {
+    function OpenAccountDiv() {
 
-        ekoodiBank.insertAccount();
+        var accAdd = document.getElementById("accAdd");
+
+        if (accAdd.style.display == 'block') {
+
+            ekoodiBank.showAccDiv(false);
+            ekoodiBank.showCustDiv(false);
+        }
+        else {
+            ekoodiBank.showAccDiv(true);
+            ekoodiBank.showCustDiv(false);
+            var label = document.getElementById("newAcc");
+            label.textContent = 'New account for ' + ekoodiBank.ui.selectedCustomer.lastName + ' ' + ekoodiBank.ui.selectedCustomer.firstName +
+                ' in ' + ekoodiBank.ui.selectedBank.name;
+        }
     }
 
     // Create the gorgeous "Database" :-)
@@ -209,18 +242,18 @@
     bank.addCustomer(c1);
     var a1 = ekoodiBank.bankAccount('Mikko', 'Rantakallio', 'FI67 3636 3010 02047', 'NDEAFIHH')
     c1.addAccount(a1);
-    var t1 = ekoodiBank.transaction('FI67 3636 3010 02047', d1, 355);
+    var t1 = ekoodiBank.transaction('FI67 3636 3010 02047', d1, 355.45);
     a1.addTransaction(t1);
-    var t2 = ekoodiBank.transaction('FI67 3636 3010 02047', d2, -45);
+    var t2 = ekoodiBank.transaction('FI67 3636 3010 02047', d2, -45.25);
     a1.addTransaction(t2);
 
     var c2 = ekoodiBank.customer('James', 'Bond');
     bank.addCustomer(c2);
     var a2 = ekoodiBank.bankAccount('James', 'Bond', 'FI67 3636 5555 11111', 'NDEAFIHH')
     c2.addAccount(a2);
-    var t3 = ekoodiBank.transaction('FI67 3636 5555 11111', d2, 105);
+    var t3 = ekoodiBank.transaction('FI67 3636 5555 11111', d2, 105.11);
     a2.addTransaction(t3);
-    var t4 = ekoodiBank.transaction('FI67 3636 5555 11111', d1, -85);
+    var t4 = ekoodiBank.transaction('FI67 3636 5555 11111', d1, -85.25);
     a2.addTransaction(t4);
 
     var c3 = ekoodiBank.customer('Matti', 'Nykänen');

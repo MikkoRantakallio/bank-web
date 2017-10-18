@@ -83,15 +83,6 @@ ekoodiBank.enableAccountAdd = function (enable) {
 
 ekoodiBank.insertAccount = function () {
 
-    var custAddDiv = document.getElementById("custAdd");
-    custAddDiv.style.display = 'none';
-    var accAddDiv = document.getElementById("accAdd");
-    accAddDiv.style.display = 'block';
-
-    var label = document.getElementById("newAcc");
-    label.textContent += ' ' + ekoodiBank.ui.selectedCustomer.lastName + ' ' + ekoodiBank.ui.selectedCustomer.firstName +
-    ' in ' + ekoodiBank.ui.selectedBank.name;
-
     var iban = document.getElementById("iban");
 
     if (iban.value !=""){
@@ -113,7 +104,7 @@ ekoodiBank.insertAccount = function () {
 
         // Clear fields and hide div
         iban.value = "";
-        accAddDiv.style.display = 'none';
+        ekoodiBank.showAccDiv(false);
     }
 };
 
