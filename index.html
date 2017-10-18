@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <title>WEB-Bank by Mikko R.</title>
 
+    <link rel="stylesheet"
+          href="node_modules/material-components-web/dist/material-components-web.css">
+
     <script>
         var ekoodiBank = {};
     </script>
@@ -14,67 +17,160 @@
     <script src="ekoodi-transaction.js"></script>
 
     <style>
-        div{
+        .transDiv {
             background-color: lightgray;
+        }
+
+        .addButton {
+            margin-left: 10px;
+        }
+
+        .comboBox {
+            height: 30px;
+        }
+
+        body {
+            padding-top: 25px;
+            background-color: azure;
+        }
+
+        #amountLabel {
+            margin-left: 10px;
+            margin-right: 5px;
+        }
+
+        .saveButton {
+            margin-left: 5px;
+        }
+
+        #dateLabel {
+            margin-right: 5px;
         }
     </style>
 </head>
 <body>
-<h3>Select bank</h3>
 
-<select id="bankDropDown" onchange="ChangeBankDropDown (this.value)">
-    <option></option>
-</select>
+<div class="mdc-elevation--z8" style="width: 580px; margin: auto; padding: 12px; background-color: white">
 
-<h3>Select customer</h3>
+    <h3 class="mdc-typography--headline">Select bank</h3>
 
-<select id="custDropDown" onchange="ChangeCustDropDown (this.value)">
-    <option></option>
-</select>
+    <select class="mdc-elevation--z8 mdc-typography--subheading2 comboBox" id="bankDropDown"
+            onchange="ChangeBankDropDown (this.value)"
+            style="width: 200px;">
+        <option></option>
+    </select>
 
-<h3>Select account</h3>
+    <h3 class="mdc-typography--headline">Select customer</h3>
 
-<select id="accDropDown" onchange="ChangeAccDropDown (this.value)">
-    <option></option>
-</select>
+    <select class="mdc-elevation--z8 mdc-typography--subheading2 comboBox" id="custDropDown"
+            onchange="ChangeCustDropDown (this.value)"
+            style="width: 200px;">
+        <option></option>
+    </select>
+    <button class="mdc-button mdc-button--raised mdc-button--dense addButton" id="custAddButton"
+            onclick="OpenCustomerDiv()">Add customer
+    </button>
 
-<h3>Transactions</h3>
+    <h3 class="mdc-typography--headline">Select account</h3>
 
-<input type="date" id="transDate" onkeydown="return false">
-<input type="number" id="transAmount" step="0.01">
-<input type="Submit" id="saveButton" value="Add" onclick="SaveTransaction()">
-<br>
-<br>
+    <select class="mdc-elevation--z8 mdc-typography--subheading2 comboBox" id="accDropDown"
+            onchange="ChangeAccDropDown (this.value)" style="width: 200px;">
+        <option></option>
+    </select>
+    <button class="mdc-button mdc-button--raised mdc-button--dense addButton" id="accAddButton" onclick="AddAccount()">
+        Add account
+    </button>
 
-<div id="transDiv">
+    <h3 class="mdc-typography--headline">Transactions</h3>
+
+    <label for="css-only-textfield-box" class="mdc-typography--subheading2">Date</label>
+    <div class="mdc-textfield mdc-textfield--box">
+        <input type="date" class="mdc-textfield__input" id="transDate" style="width: 190px;">
+    </div>
+
+    <label for="css-only-textfield-box" class="mdc-typography--subheading2">Amount</label>
+    <div class="mdc-textfield mdc-textfield--box">
+        <input type="number" class="mdc-textfield__input" id="transAmount" step="0.01"
+               style="width: 150px;">
+    </div>
+    <button class="mdc-button mdc-button--raised mdc-button--dense saveButton" id="saveButton" onclick="SaveTransaction()">Add
+    </button>
+
+
+    <div class="mdc-typography--body1 transDiv" id="transDiv">
+
+    </div>
 
 </div>
 
+<!-- Customer add div -->
+<div id="custAdd" class="mdc-elevation--z8"
+     style="width: 580px; margin-top: 15px; margin-left: auto; margin-right: auto; padding: 12px; background-color: white">
+    <h3 class="mdc-typography--headline">New customer</h3>
+    <label for="css-only-textfield-box" class="mdc-typography--subheading2">First name</label>
+    <div class="mdc-textfield mdc-textfield--box">
+        <input type="text" class="mdc-textfield__input" id="firstName" style="width: 100px;">
+    </div>
+
+    <label for="css-only-textfield-box" class="mdc-typography--subheading2">Last name</label>
+    <div class="mdc-textfield mdc-textfield--box">
+        <input type="text" class="mdc-textfield__input" id="lastName" style="width: 190px;">
+    </div>
+    <button class="mdc-button mdc-button--raised mdc-button--dense saveButton" id="saveCustButton" onclick="ekoodiBank.insertCustomer()">Add
+    </button>
+</div>
+
+<!-- Account add div -->
+<div id="accAdd" class="mdc-elevation--z8"
+     style="width: 580px; margin-top: 15px; margin-left: auto; margin-right: auto; padding: 12px; background-color: white">
+
+    <h3 id="newAcc" class="mdc-typography--headline">New account for</h3>
+    <label for="css-only-textfield-box" class="mdc-typography--subheading2">IBAN</label>
+    <div class="mdc-textfield mdc-textfield--box">
+        <input type="text" class="mdc-textfield__input" id="iban" style="width: 250px;">
+    </div>
+
+    <button class="mdc-button mdc-button--raised mdc-button--dense saveButton" id="saveAcctButton" onclick="AddAccount()">Add
+    </button>
+</div>
+
+<script src="node_modules/material-components-web/dist/material-components-web.js"></script>
+<script>mdc.autoInit()</script>
+
 <script>
 
-    function ChangeBankDropDown(value){
+    function ChangeBankDropDown(value) {
 
         ekoodiBank.clearBank();
-        if (value !='') {
+        if (value != '') {
 
             ekoodiBank.fillCustCombo(value);
+            ekoodiBank.enableCustomerAdd(true);
+        }
+        else {
+            ekoodiBank.enableAccountAdd(false);
+            ekoodiBank.enableCustomerAdd(false);
         }
     }
 
-    function ChangeCustDropDown(value){
+    function ChangeCustDropDown(value) {
 
         ekoodiBank.clearCust();
-        if (value !='') {
+        if (value != '') {
 
             var commaPos = value.indexOf(',');
-            ekoodiBank.fillAccountCombo(value.substring(commaPos+1), value.substring(0,commaPos));
+            ekoodiBank.fillAccountCombo(value.substring(commaPos + 1), value.substring(0, commaPos));
+            ekoodiBank.enableAccountAdd(true);
+        }
+        else {
+            ekoodiBank.enableAccountAdd(false);
         }
     }
 
-    function ChangeAccDropDown(value){
+    function ChangeAccDropDown(value) {
 
         ekoodiBank.clearAccount();
-        if (value !='') {
+        if (value != '') {
 
             ekoodiBank.showTransactions(value);
             ekoodiBank.enableTransactionAdd(true);
@@ -84,9 +180,21 @@
         }
     }
 
-    function SaveTransaction(){
+    function SaveTransaction() {
 
         ekoodiBank.SaveTransaction();
+    }
+
+    function OpenCustomerDiv() {
+
+        ekoodiBank.showAccDiv(false);
+        ekoodiBank.showCustDiv(true);
+//        ekoodiBank.insertCustomer();
+    }
+
+    function AddAccount() {
+
+        ekoodiBank.insertAccount();
     }
 
     // Create the gorgeous "Database" :-)
@@ -94,71 +202,74 @@
     var d1 = new Date('10.12.2017');
     var d2 = new Date('05.09.2017');
 
-    var bank = ekoodiBank.bank('Nordea','NDEAFIHH');
+    var bank = ekoodiBank.bank('Nordea', 'NDEAFIHH');
     ekoodiBank.bankList.push(bank);
 
     var c1 = ekoodiBank.customer('Mikko', 'Rantakallio');
     bank.addCustomer(c1);
-    var a1 = ekoodiBank.bankAccount('Mikko', 'Rantakallio','FI67 3636 3010 02047','NDEAFIHH')
+    var a1 = ekoodiBank.bankAccount('Mikko', 'Rantakallio', 'FI67 3636 3010 02047', 'NDEAFIHH')
     c1.addAccount(a1);
-    var t1 = ekoodiBank.transaction('FI67 3636 3010 02047', d1,355);
+    var t1 = ekoodiBank.transaction('FI67 3636 3010 02047', d1, 355);
     a1.addTransaction(t1);
-    var t2 = ekoodiBank.transaction('FI67 3636 3010 02047', d2,-45);
+    var t2 = ekoodiBank.transaction('FI67 3636 3010 02047', d2, -45);
     a1.addTransaction(t2);
 
     var c2 = ekoodiBank.customer('James', 'Bond');
     bank.addCustomer(c2);
-    var a2 = ekoodiBank.bankAccount('James', 'Bond','FI67 3636 5555 11111','NDEAFIHH')
+    var a2 = ekoodiBank.bankAccount('James', 'Bond', 'FI67 3636 5555 11111', 'NDEAFIHH')
     c2.addAccount(a2);
-    var t3 = ekoodiBank.transaction('FI67 3636 5555 11111', d2,105);
+    var t3 = ekoodiBank.transaction('FI67 3636 5555 11111', d2, 105);
     a2.addTransaction(t3);
-    var t4 = ekoodiBank.transaction('FI67 3636 5555 11111', d1,-85);
+    var t4 = ekoodiBank.transaction('FI67 3636 5555 11111', d1, -85);
     a2.addTransaction(t4);
 
     var c3 = ekoodiBank.customer('Matti', 'Nykänen');
     bank.addCustomer(c3);
-    var a3 = ekoodiBank.bankAccount('Matti', 'Nykänen','FI67 3636 1111 32003','NDEAFIHH')
+    var a3 = ekoodiBank.bankAccount('Matti', 'Nykänen', 'FI67 3636 1111 32003', 'NDEAFIHH')
     c3.addAccount(a3);
 
-    var bank1 = ekoodiBank.bank('S-Pankki','SBANFIHH');
+    var bank1 = ekoodiBank.bank('S-Pankki', 'SBANFIHH');
     ekoodiBank.bankList.push(bank1);
     var c4 = ekoodiBank.customer('Jack', 'Reacher');
     bank1.addCustomer(c4);
-    var a4 = ekoodiBank.bankAccount('Jack', 'Reacher','FI67 3444 1111 32003','SBANFIHH')
+    var a4 = ekoodiBank.bankAccount('Jack', 'Reacher', 'FI67 3444 1111 32003', 'SBANFIHH')
     c4.addAccount(a4);
 
     var c5 = ekoodiBank.customer('Ethan', 'Hunt');
     bank1.addCustomer(c5);
-    var a5 = ekoodiBank.bankAccount('Ethan', 'Hunt','FI66 3456 4444 36663','SBANFIHH')
+    var a5 = ekoodiBank.bankAccount('Ethan', 'Hunt', 'FI66 3456 4444 36663', 'SBANFIHH')
     c5.addAccount(a5);
 
     var c6 = ekoodiBank.customer('Frank', 'Martin');
     bank1.addCustomer(c6);
-    var a6 = ekoodiBank.bankAccount('Frank', 'Martin','FI68 3654 8765 22263','SBANFIHH')
+    var a6 = ekoodiBank.bankAccount('Frank', 'Martin', 'FI68 3654 8765 22263', 'SBANFIHH')
     c6.addAccount(a6);
 
-    var bank2 = ekoodiBank.bank('Osuuspankki','OKOYFIHH');
+    var bank2 = ekoodiBank.bank('Osuuspankki', 'OKOYFIHH');
     ekoodiBank.bankList.push(bank2);
     var c7 = ekoodiBank.customer('Sergey', 'Bubka');
     bank2.addCustomer(c7);
-    var a7 = ekoodiBank.bankAccount('Sergey', 'Bubka','FI23 6543 8765 22263','OKOYFIHH')
+    var a7 = ekoodiBank.bankAccount('Sergey', 'Bubka', 'FI23 6543 8765 22263', 'OKOYFIHH')
     c7.addAccount(a7);
 
     var c8 = ekoodiBank.customer('Usain', 'Bolt');
     bank2.addCustomer(c8);
-    var a8 = ekoodiBank.bankAccount('Usain', 'Bolt','FI26 6123 5678 22263','OKOYFIHH')
+    var a8 = ekoodiBank.bankAccount('Usain', 'Bolt', 'FI26 6123 5678 22263', 'OKOYFIHH')
     c8.addAccount(a8);
 
     var c9 = ekoodiBank.customer('Michael', 'Phelps');
     bank2.addCustomer(c9);
-    var a9 = ekoodiBank.bankAccount('Michael', 'Phelps','FI28 6001 5008 20003','OKOYFIHH')
+    var a9 = ekoodiBank.bankAccount('Michael', 'Phelps', 'FI28 6001 5008 20003', 'OKOYFIHH')
     c9.addAccount(a9);
 
     var bCombo = document.getElementById('bankDropDown');
     ekoodiBank.fillCombo(bCombo, ekoodiBank.bankList);
 
-    // Hide the transaction fields and button by default
+    // Hide the transaction fields and buttons by default
     ekoodiBank.enableTransactionAdd(false);
+    ekoodiBank.enableCustomerAdd(false);
+    ekoodiBank.enableAccountAdd(false);
+    ekoodiBank.hideAddDivs();
 
 </script>
 </body>

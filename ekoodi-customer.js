@@ -5,11 +5,11 @@ ekoodiBank.customer = function (firstName, lastName) {
     var lastName = lastName;
     var accounts = [];
 
-    function addAccountToCustomer(account){
+    function addAccountToCustomer(account) {
         accounts.push(account);
     }
 
-    function getAccountList(){
+    function getAccountList() {
         return accounts;
     }
 
@@ -30,7 +30,7 @@ ekoodiBank.fillCustCombo = function (bank) {
 
             // First clear the customer combo box
             var custCombo = document.getElementById('custDropDown');
-            for(j = custCombo.options.length - 1 ; j >= 0 ; j--) {
+            for (j = custCombo.options.length - 1; j >= 0; j--) {
                 custCombo.remove(j);
             }
 
@@ -44,7 +44,7 @@ ekoodiBank.fillCustCombo = function (bank) {
             var emptyElem = document.createElement("option");
             custCombo.appendChild(emptyElem);
 
-            for (var j=0; j< arrLen; j++){
+            for (var j = 0; j < arrLen; j++) {
 
                 var opt = custList[j];
                 var elem = document.createElement("option");
@@ -54,5 +54,47 @@ ekoodiBank.fillCustCombo = function (bank) {
                 custCombo.appendChild(elem)
             }
         }
+    }
+};
+
+ekoodiBank.enableCustomerAdd = function (enable) {
+
+    var custAddB = document.getElementById("custAddButton");
+
+    if (enable) {
+
+        custAddB.style.visibility = 'visible';
+    }
+    else {
+
+        custAddB.style.visibility = 'hidden';
+    }
+};
+
+ekoodiBank.insertCustomer = function () {
+
+    var fName = document.getElementById("firstName");
+    var lName = document.getElementById("lastName");
+
+    if (fName.value !="" && lName.value !=""){
+
+        var custList = ekoodiBank.ui.selectedBank.getCustomers();
+        var cust = ekoodiBank.customer(fName.value, lName.value);
+
+        custList.push(cust);
+
+        // Add customer to combo box
+        var elem = document.createElement("option");
+        elem.textContent = cust.lastName + ' ' + cust.firstName;
+        elem.value = cust.lastName + ',' + cust.firstName;
+        var custCombo = document.getElementById('custDropDown');
+        custCombo.appendChild(elem)
+
+        // Clear fields and hide div
+        fName.value = "";
+        lName.value = "";
+
+        var custAddDiv = document.getElementById("custAdd");
+        custAddDiv.style.display = 'none';
     }
 };

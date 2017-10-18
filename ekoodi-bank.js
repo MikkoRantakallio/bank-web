@@ -73,6 +73,7 @@ ekoodiBank.clearBank = function () {
 
     ClearCust();
     ClearAccounts();
+    ekoodiBank.hideAddDivs();
 
     var tDiv = document.getElementById("transDiv");
     tDiv.innerHTML = "";
@@ -108,6 +109,36 @@ ekoodiBank.clearAccount = function () {
 
     // Hide the transaction fields and button
     ekoodiBank.enableTransactionAdd(false);
+};
+
+ekoodiBank.hideAddDivs = function () {
+
+    var custAddDiv = document.getElementById("custAdd");
+    custAddDiv.style.display = 'none';
+    var accAddDiv = document.getElementById("accAdd");
+    accAddDiv.style.display = 'none';
+};
+
+ekoodiBank.showAccDiv = function (value) {
+
+    var accAddDiv = document.getElementById("accAdd");
+    if (value) {
+        accAddDiv.style.display = 'block';
+    }
+    else{
+        accAddDiv.style.display = 'none';
+    }
+};
+
+ekoodiBank.showCustDiv = function (value) {
+
+    var custAddDiv = document.getElementById("custAdd");
+    if (value) {
+        custAddDiv.style.display = 'block';
+    }
+    else{
+        custAddDiv.style.display = 'none';
+    }
 };
 
 ekoodiBank.bankList = [];
