@@ -69,15 +69,29 @@ ekoodiBank.fillAccountCombo = function ( fName, lName) {
 
 ekoodiBank.enableAccountAdd = function (enable) {
 
-    var custAddDiv = document.getElementById("accAddButton");
+    var custAddB = document.getElementById("accAddButton");
 
     if (enable) {
 
-        custAddDiv.style.visibility = 'visible';
+        custAddB.style.visibility = 'visible';
     }
     else {
 
-        custAddDiv.style.visibility = 'hidden';
+        custAddB.style.visibility = 'hidden';
+    }
+};
+
+ekoodiBank.enableAccountDelete = function (enable) {
+
+    var custDelB = document.getElementById("accDeleteButton");
+
+    if (enable) {
+
+        custDelB.style.visibility = 'visible';
+    }
+    else {
+
+        custDelB.style.visibility = 'hidden';
     }
 };
 

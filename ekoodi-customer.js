@@ -71,6 +71,20 @@ ekoodiBank.enableCustomerAdd = function (enable) {
     }
 };
 
+ekoodiBank.enableCustomerDelete = function (enable) {
+
+    var custDelB = document.getElementById("custDeleteButton");
+
+    if (enable) {
+
+        custDelB.style.visibility = 'visible';
+    }
+    else {
+
+        custDelB.style.visibility = 'hidden';
+    }
+};
+
 ekoodiBank.insertCustomer = function () {
 
     var fName = document.getElementById("firstName");

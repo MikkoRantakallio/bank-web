@@ -27,19 +27,7 @@ ekoodiBank.showTransactions = function (iban) {
 
             for (l = 0; l < tActions.length; l++) {
 
-                var MyDateString = ('0' + tActions[l].date.getDate()).slice(-2) + '.'
-                    + ('0' + (tActions[l].date.getMonth() + 1)).slice(-2) + '.'
-                    + tActions[l].date.getFullYear();
-
-                var signStr = "";
-                if (Number(tActions[l].amount) > 0) {
-                    signStr = '+';
-                }
-                var div = document.createElement('div');
-                div.className = 'tRow';
-                div.textContent = MyDateString + ': ' + signStr + Number(tActions[l].amount).toFixed(2) + 'e';
-
-                tDiv.appendChild(div);
+                createTransRow(tActions[l], false);
             }
         }
     }
@@ -68,29 +56,35 @@ ekoodiBank.SaveTransaction = function () {
 
     if (Number(amountField.value) != 0) {
 
-        var MyDateString = ('0' + tDate.getDate()).slice(-2) + '.' + ('0' + (tDate.getMonth() + 1)).slice(-2)
-            + '.' + tDate.getFullYear();
-
         var newTrans = ekoodiBank.transaction(ekoodiBank.ui.selectedAccount.iban, tDate, amountField.value);
 
-        // Get existing transaction list and add the new one
-        var tActions = ekoodiBank.ui.selectedAccount.getTransactions();
-        tActions.push(newTrans);
-
-        // Update div element
-        var signStr = "";
-        if (Number(newTrans.amount) > 0) {
-            signStr = '+';
-        }
-        var tDiv = document.getElementById("transDiv");
-
-        var div = document.createElement('div');
-        div.className = 'tRow';
-        div.textContent = MyDateString + ': ' + signStr + Number(newTrans.amount).toFixed(2) + 'e';
-        tDiv.appendChild(div);
+        createTransRow(newTrans, true);
 
         // Clear fields
         dateField.value = null;
         amountField.value = null;
     }
+}
+
+function createTransRow(transAction, addToCollection){
+
+    var tDiv = document.getElementById("transDiv");
+
+    if (addToCollection) {
+        var tActions = ekoodiBank.ui.selectedAccount.getTransactions();
+        tActions.push(transAction);
+    }
+
+    var MyDateString = ('0' + transAction.date.getDate()).slice(-2) + '.' + ('0' + (transAction.date.getMonth() + 1)).slice(-2)
+        + '.' + transAction.date.getFullYear();
+
+    var signStr = "";
+    if (Number(transAction.amount) > 0) {
+        signStr = '+';
+    }
+
+    var div = document.createElement('div');
+    div.className = 'tRow';
+    div.textContent = MyDateString + ': ' + signStr + Number(transAction.amount).toFixed(2) + 'e';
+    tDiv.appendChild(div);
 }

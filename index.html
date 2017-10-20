@@ -76,6 +76,9 @@
     <button class="mdc-button mdc-button--raised mdc-button--dense addButton" id="custAddButton"
             onclick="OpenCustomerDiv()">Add customer
     </button>
+    <button class="mdc-button mdc-button--raised mdc-button--dense addButton" id="custDeleteButton"
+            onclick="DeleteCustomer()">Delete customer
+    </button>
 
     <h3 class="mdc-typography--headline">Select account</h3>
 
@@ -86,6 +89,10 @@
     <button class="mdc-button mdc-button--raised mdc-button--dense addButton" id="accAddButton"
             onclick="OpenAccountDiv()">
         Add account
+    </button>
+    <button class="mdc-button mdc-button--raised mdc-button--dense addButton" id="accDeleteButton"
+            onclick="OpenAccountDiv()">
+        Delete account
     </button>
 
     <h3 class="mdc-typography--headline">Transactions</h3>
@@ -144,6 +151,28 @@
     </button>
 </div>
 
+<aside id="confirm-delete"
+       class="mdc-dialog"
+       role="alertdialog"
+       aria-labelledby="my-mdc-dialog-label"
+       aria-describedby="my-mdc-dialog-description">
+    <div class="mdc-dialog__surface">
+        <header class="mdc-dialog__header">
+            <h2 id="my-mdc-dialog-label" class="mdc-dialog__header__title">
+                Confirm delete
+            </h2>
+        </header>
+        <section id="my-mdc-dialog-description" class="mdc-dialog__body">
+            Are you sure?
+        </section>
+        <footer class="mdc-dialog__footer">
+            <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel">Decline</button>
+            <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept">Accept</button>
+        </footer>
+    </div>
+    <div class="mdc-dialog__backdrop"></div>
+</aside>
+
 <script src="node_modules/material-components-web/dist/material-components-web.js"></script>
 <script>mdc.autoInit()</script>
 
@@ -160,6 +189,8 @@
         else {
             ekoodiBank.enableAccountAdd(false);
             ekoodiBank.enableCustomerAdd(false);
+            ekoodiBank.enableCustomerDelete(false);
+            ekoodiBank.enableAccountDelete(false);
         }
     }
 
@@ -171,9 +202,12 @@
             var commaPos = value.indexOf(',');
             ekoodiBank.fillAccountCombo(value.substring(commaPos + 1), value.substring(0, commaPos));
             ekoodiBank.enableAccountAdd(true);
+            ekoodiBank.enableCustomerDelete(true);
         }
         else {
             ekoodiBank.enableAccountAdd(false);
+            ekoodiBank.enableCustomerDelete(false);
+            ekoodiBank.enableAccountDelete(false);
         }
     }
 
@@ -184,15 +218,40 @@
 
             ekoodiBank.showTransactions(value);
             ekoodiBank.enableTransactionAdd(true);
+            ekoodiBank.enableAccountDelete(true);
         }
         else {
             ekoodiBank.enableTransactionAdd(false);
+            ekoodiBank.enableAccountDelete(false);
         }
     }
 
     function SaveTransaction() {
 
         ekoodiBank.SaveTransaction();
+    }
+
+    function DeleteCustomer() {
+
+//        const mdcDialog = require('@material/dialog');
+/*        const MDCDialog = mdcDialog.MDCDialog;
+        const MDCDialogFoundation = mdcDialog.MDCDialogFoundation;
+        const util = mdcDialog.util;
+*/
+        var dialog = new mdc.dialog.MDCDialog(document.querySelector('#confirm-delete'));
+
+        dialog.listen('MDCDialog:accept', function() {
+            console.log('accepted');
+        })
+
+        dialog.listen('MDCDialog:cancel', function() {
+            console.log('canceled');
+        })
+
+        document.querySelector('#custDeleteButton').addEventListener('click', function (evt) {
+            dialog.lastFocusedTarget = evt.target;
+            dialog.show();
+        })
     }
 
     function OpenCustomerDiv() {
@@ -301,7 +360,9 @@
     // Hide the transaction fields and buttons by default
     ekoodiBank.enableTransactionAdd(false);
     ekoodiBank.enableCustomerAdd(false);
+    ekoodiBank.enableCustomerDelete(false);
     ekoodiBank.enableAccountAdd(false);
+    ekoodiBank.enableAccountDelete(false);
     ekoodiBank.hideAddDivs();
 
 </script>
