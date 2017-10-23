@@ -25,12 +25,15 @@ ekoodiBank.showTransactions = function (iban) {
             ekoodiBank.ui.selectedAccount = accList[j];
             var tActions = ekoodiBank.ui.selectedAccount.getTransactions();
 
+            tActions = _.sortBy(tActions, 'date');
+
             for (l = 0; l < tActions.length; l++) {
 
                 createTransRow(tActions[l], false);
             }
         }
     }
+    ekoodiBank.calculateSaldo();
 };
 
 ekoodiBank.enableTransactionAdd = function (enable) {
@@ -45,7 +48,7 @@ ekoodiBank.enableTransactionAdd = function (enable) {
 
         saveButton.style.visibility = 'hidden';
     }
-}
+};
 
 ekoodiBank.SaveTransaction = function () {
 
@@ -54,9 +57,11 @@ ekoodiBank.SaveTransaction = function () {
     var amountField = document.getElementById("transAmount");
     var tDate = new Date(dateField.value);
 
-    if (Number(amountField.value) != 0) {
+    var x = Number(tDate.getDay());
 
-        var newTrans = ekoodiBank.transaction(ekoodiBank.ui.selectedAccount.iban, tDate, amountField.value);
+    if (Number(amountField.value) != 0 && !isNaN(tDate.getDay())) {
+
+        var newTrans = ekoodiBank.transaction(ekoodiBank.ui.selectedAccount.iban, tDate, Number(amountField.value));
 
         createTransRow(newTrans, true);
 
@@ -64,7 +69,8 @@ ekoodiBank.SaveTransaction = function () {
         dateField.value = null;
         amountField.value = null;
     }
-}
+    ekoodiBank.showTransactions(ekoodiBank.ui.selectedAccount.iban);
+};
 
 function createTransRow(transAction, addToCollection){
 
@@ -75,8 +81,15 @@ function createTransRow(transAction, addToCollection){
         tActions.push(transAction);
     }
 
-    var MyDateString = ('0' + transAction.date.getDate()).slice(-2) + '.' + ('0' + (transAction.date.getMonth() + 1)).slice(-2)
-        + '.' + transAction.date.getFullYear();
+    var MyDateString;
+
+    if (transAction.date) {
+        MyDateString = ('0' + transAction.date.getDate()).slice(-2) + '.' + ('0' + (transAction.date.getMonth() + 1)).slice(-2)
+            + '.' + transAction.date.getFullYear();
+    }
+    else {
+        MyDateString = 'Balance';
+    }
 
     var signStr = "";
     if (Number(transAction.amount) > 0) {
@@ -85,6 +98,11 @@ function createTransRow(transAction, addToCollection){
 
     var div = document.createElement('div');
     div.className = 'tRow';
-    div.textContent = MyDateString + ': ' + signStr + Number(transAction.amount).toFixed(2) + 'e';
+    div.textContent = MyDateString;
+    var span = document.createElement('span');
+
+    span.style.float='right';
+    span.textContent = signStr + Number(transAction.amount).toFixed(2) + 'e';
+    div.appendChild(span);
     tDiv.appendChild(div);
-}
+};

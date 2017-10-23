@@ -15,6 +15,7 @@
     <script src="ekoodi-customer.js"></script>
     <script src="ekoodi-bank-account.js"></script>
     <script src="ekoodi-transaction.js"></script>
+    <script src="lib\lodash.js"></script>
 
     <style>
         .transDiv {
@@ -76,8 +77,7 @@
     <button class="mdc-button mdc-button--raised mdc-button--dense addButton" id="custAddButton"
             onclick="OpenCustomerDiv()">Add customer
     </button>
-    <button class="mdc-button mdc-button--raised mdc-button--dense addButton" id="custDeleteButton"
-            onclick="DeleteCustomer()">Delete customer
+    <button class="mdc-button mdc-button--raised mdc-button--dense addButton" id="custDeleteButton">Delete customer
     </button>
 
     <h3 class="mdc-typography--headline">Select account</h3>
@@ -90,8 +90,7 @@
             onclick="OpenAccountDiv()">
         Add account
     </button>
-    <button class="mdc-button mdc-button--raised mdc-button--dense addButton" id="accDeleteButton"
-            onclick="OpenAccountDiv()">
+    <button class="mdc-button mdc-button--raised mdc-button--dense addButton" id="accDeleteButton">
         Delete account
     </button>
 
@@ -99,7 +98,8 @@
 
     <label for="css-only-textfield-box" class="mdc-typography--subheading2">Date</label>
     <div class="mdc-textfield mdc-textfield--box">
-        <input type="date" class="mdc-textfield__input" id="transDate" style="width: 190px;" input onkeydown="return false">
+        <input type="date" class="mdc-textfield__input" id="transDate" style="width: 190px;" input
+               onkeydown="return false">
     </div>
 
     <label for="css-only-textfield-box" class="mdc-typography--subheading2">Amount</label>
@@ -151,23 +151,53 @@
     </button>
 </div>
 
-<aside id="confirm-delete"
+<aside id="confirm-delete-customer"
        class="mdc-dialog"
        role="alertdialog"
        aria-labelledby="my-mdc-dialog-label"
        aria-describedby="my-mdc-dialog-description">
     <div class="mdc-dialog__surface">
         <header class="mdc-dialog__header">
-            <h2 id="my-mdc-dialog-label" class="mdc-dialog__header__title">
+            <h2 class="mdc-dialog__header__title">
                 Confirm delete
             </h2>
         </header>
-        <section id="my-mdc-dialog-description" class="mdc-dialog__body">
-            Are you sure?
+        <section class="mdc-dialog__body">
+            Do you really want to delete the customer?
         </section>
         <footer class="mdc-dialog__footer">
-            <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel">Decline</button>
-            <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept">Accept</button>
+            <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel">
+                No
+            </button>
+            <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept">
+                Yes
+            </button>
+        </footer>
+    </div>
+    <div class="mdc-dialog__backdrop"></div>
+</aside>
+
+<aside id="confirm-delete-account"
+       class="mdc-dialog"
+       role="alertdialog"
+       aria-labelledby="my-mdc-dialog-label"
+       aria-describedby="my-mdc-dialog-description">
+    <div class="mdc-dialog__surface">
+        <header class="mdc-dialog__header">
+            <h2 class="mdc-dialog__header__title">
+                Confirm delete
+            </h2>
+        </header>
+        <section class="mdc-dialog__body">
+            Do you really want to delete the account?
+        </section>
+        <footer class="mdc-dialog__footer">
+            <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel">
+                No
+            </button>
+            <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept">
+                Yes
+            </button>
         </footer>
     </div>
     <div class="mdc-dialog__backdrop"></div>
@@ -231,27 +261,31 @@
         ekoodiBank.SaveTransaction();
     }
 
-    function DeleteCustomer() {
+    var initializeDialogs = (function () {
 
-//        const mdcDialog = require('@material/dialog');
-/*        const MDCDialog = mdcDialog.MDCDialog;
-        const MDCDialogFoundation = mdcDialog.MDCDialogFoundation;
-        const util = mdcDialog.util;
-*/
-        var dialog = new mdc.dialog.MDCDialog(document.querySelector('#confirm-delete'));
+        createDialog('#confirm-delete-customer', ekoodiBank.deleteCustomer, null, '#custDeleteButton');
+        createDialog('#confirm-delete-account', ekoodiBank.deleteAccount, null, '#accDeleteButton');
 
-        dialog.listen('MDCDialog:accept', function() {
-            console.log('accepted');
-        })
+    })();
 
-        dialog.listen('MDCDialog:cancel', function() {
-            console.log('canceled');
-        })
+    function createDialog(dialogElementId, onAccept, onCancel, deleteButtonId) {
 
-        document.querySelector('#custDeleteButton').addEventListener('click', function (evt) {
+        var dialog = new mdc.dialog.MDCDialog(document.querySelector(dialogElementId));
+
+        dialog.listen('MDCDialog:accept', function () {
+            onAccept();
+        });
+
+        dialog.listen('MDCDialog:cancel', function () {
+            if (onCancel) {
+                onCancel();
+            }
+        });
+
+        document.querySelector(deleteButtonId).addEventListener('click', function (evt) {
             dialog.lastFocusedTarget = evt.target;
             dialog.show();
-        })
+        });
     }
 
     function OpenCustomerDiv() {

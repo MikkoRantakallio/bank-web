@@ -122,3 +122,28 @@ ekoodiBank.insertAccount = function () {
     }
 };
 
+ekoodiBank.deleteAccount = function () {
+
+    var i = ekoodiBank.ui.selectedCustomer.getAccounts().indexOf(ekoodiBank.ui.selectedAccount);
+    ekoodiBank.ui.selectedCustomer.getAccounts().splice(i,1);
+
+    var accCombo = document.getElementById('accDropDown');
+    var i = accCombo.selectedIndex;
+    accCombo.remove(i);
+    ekoodiBank.clearAccount();
+    ekoodiBank.enableTransactionAdd(false);
+    ekoodiBank.enableAccountDelete(false);
+};
+
+ekoodiBank.calculateSaldo = function () {
+
+    var saldo = 0.0;
+    var actionList = ekoodiBank.ui.selectedAccount.getTransactions();
+
+    for (var i = 0; i < actionList.length ; i ++) {
+
+        saldo += Number(actionList[i].amount);
+    }
+    var newTrans = ekoodiBank.transaction(ekoodiBank.ui.selectedAccount.iban, null, saldo);
+    createTransRow(newTrans, false);
+};

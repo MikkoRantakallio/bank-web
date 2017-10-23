@@ -110,3 +110,20 @@ ekoodiBank.insertCustomer = function () {
         ekoodiBank.showCustDiv(false);
     }
 };
+
+ekoodiBank.deleteCustomer = function () {
+
+    var i = ekoodiBank.ui.selectedBank.getCustomers().indexOf(ekoodiBank.ui.selectedCustomer);
+    ekoodiBank.ui.selectedBank.getCustomers().splice(i,1);
+
+    var custCombo = document.getElementById('custDropDown');
+    var i = custCombo.selectedIndex;
+    custCombo.remove(i);
+
+    var accCombo = document.getElementById('accDropDown');
+    accCombo.selectedIndex = 0;
+    ekoodiBank.clearAccount();
+    ekoodiBank.enableTransactionAdd(false);
+    ekoodiBank.enableAccountDelete(false);
+    ekoodiBank.enableCustomerDelete(false);
+};
